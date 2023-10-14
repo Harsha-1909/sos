@@ -1,10 +1,10 @@
 package com.sos.application.controller;
 
 import com.sos.application.entity.Zone;
-import com.sos.application.model.Area;
-import com.sos.application.model.District;
-import com.sos.application.model.State;
-import com.sos.application.model.SubDistrict;
+import com.sos.application.model.zone.Area;
+import com.sos.application.model.zone.District;
+import com.sos.application.model.zone.State;
+import com.sos.application.model.zone.SubDistrict;
 import com.sos.application.repository.ZoneRepository;
 import com.sos.application.service.ZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController

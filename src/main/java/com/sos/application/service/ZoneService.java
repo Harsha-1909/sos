@@ -1,13 +1,12 @@
 package com.sos.application.service;
 
-import com.sos.application.model.Area;
-import com.sos.application.model.District;
-import com.sos.application.model.State;
-import com.sos.application.model.SubDistrict;
+import com.sos.application.model.zone.Area;
+import com.sos.application.model.zone.District;
+import com.sos.application.model.zone.State;
+import com.sos.application.model.zone.SubDistrict;
 import com.sos.application.repository.ZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 import java.util.Optional;
