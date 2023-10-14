@@ -5,9 +5,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,6 +26,9 @@ public class MainService {
 
     @ManyToOne
     private ServiceCategory serviceCategory;
+
+    @OneToMany(mappedBy = "mainService")
+    private List<SubService> subServices;
 
     @Override
     public String toString() {

@@ -26,7 +26,7 @@ public class ServiceCategory {
     private String name;
 
     @OneToMany(mappedBy = "serviceCategory")
-    private List<MainService> mainService;
+    private List<MainService> mainServices;
 
     @Override
     public String toString() {
