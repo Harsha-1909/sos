@@ -34,22 +34,22 @@ public class ZoneService {
         return Optional.of(state);
     }
 
-    public Optional<District> getDistricts(String state){
-        Optional<List<String>> districts = zoneRepository.getDistricts(state);
-        district.setDistricts(districts.get());
-        return Optional.of(district);
+    public District getDistricts(String state){
+        List<String> districts = zoneRepository.getDistricts(state);
+        district.setDistricts(districts);
+        return district;
     }
 
-    public Optional<SubDistrict> getSubDistricts(String state, String district){
-        Optional<List<String>> subDistricts = zoneRepository.getSubDistricts(state, district);
-        subDistrict.setSubDistricts(subDistricts.get());
-        return Optional.of(subDistrict);
+    public SubDistrict getSubDistricts(String state, String district){
+        List<String> subDistricts = zoneRepository.getSubDistricts(state, district);
+        subDistrict.setSubDistricts(subDistricts);
+        return subDistrict;
     }
 
-    public Optional<Area> getAreas(String state, String district, String subDistrict){
-        Optional<List<String>> areas = zoneRepository.getAreas(state, district, subDistrict);
-        area.setAreas(areas.get());
-        return Optional.of(area);
+    public Area getAreas(String state, String district, String subDistrict){
+        List<String> areas = zoneRepository.getAreas(state, district, subDistrict);
+        area.setAreas(areas);
+        return area;
     }
 
 }

@@ -25,11 +25,11 @@ public class ZoneController {
     private ZoneService zoneService;
 
     @GetMapping("/zones/{zoneId}")
-    public String getZone(@PathVariable Long zoneId){
+    public ResponseEntity<Optional<Zone>> getZone(@PathVariable Long zoneId){
         Optional<Zone> zone = zoneRepository.findById(zoneId);
         if(zone.isPresent())
-            return zone.get().toString();
-        return null;
+            return ResponseEntity.ok().body(zone);
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/states")
@@ -42,30 +42,28 @@ public class ZoneController {
     }
 
     @GetMapping("/states/{state}/districts")
-    public ResponseEntity<Optional<District>> getDistricts(@PathVariable String state){
-        Optional<District> district = zoneService.getDistricts(state);
-        if(district.isPresent())
-            return ResponseEntity.ok().body(district);
-        else
+    public ResponseEntity<District> getDistricts(@PathVariable String state){
+        District district = zoneService.getDistricts(state);
+        if(district.getDistricts().isEmpty())
             return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(district);
     }
 
     @GetMapping("/states/{state}/districts/{district}/sub-districts")
-    public ResponseEntity<Optional<SubDistrict>> getSubDistricts(@PathVariable String state, @PathVariable String district){
-        Optional<SubDistrict> subDistrict = zoneService.getSubDistricts(state, district);
-        if(subDistrict.isPresent())
-            return ResponseEntity.ok().body(subDistrict);
-        else
+    public ResponseEntity<SubDistrict> getSubDistricts(@PathVariable String state, @PathVariable String district){
+        SubDistrict subDistrict = zoneService.getSubDistricts(state, district);
+        if(subDistrict.getSubDistricts().isEmpty()) {
             return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(subDistrict);
     }
 
     @GetMapping("/states/{state}/districts/{district}/sub-districts/{subDistrict}/areas")
-    public ResponseEntity<Optional<Area>> getAreas(@PathVariable String state, @PathVariable String district, @PathVariable String subDistrict){
-        Optional<Area> area = zoneService.getAreas(state, district, subDistrict);
-        if(area.isPresent())
-            return ResponseEntity.ok().body(area);
-        else
+    public ResponseEntity<Area> getAreas(@PathVariable String state, @PathVariable String district, @PathVariable String subDistrict) {
+        Area area = zoneService.getAreas(state, district, subDistrict);
+        if (area.getAreas().isEmpty())
             return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(area);
     }
 
 }
