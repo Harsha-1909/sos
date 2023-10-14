@@ -1,5 +1,6 @@
 package com.sos.application.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,7 +28,7 @@ public class MainService {
     @ManyToOne
     private ServiceCategory serviceCategory;
 
-    @OneToMany(mappedBy = "mainService")
+    @OneToMany(mappedBy = "mainService", cascade = CascadeType.REMOVE)
     private List<SubService> subServices;
 
     @Override

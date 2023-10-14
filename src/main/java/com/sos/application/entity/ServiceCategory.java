@@ -1,5 +1,6 @@
 package com.sos.application.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -25,8 +27,12 @@ public class ServiceCategory {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "serviceCategory")
-    private List<MainService> mainServices;
+    @OneToMany(mappedBy = "serviceCategory", cascade = CascadeType.REMOVE)
+    private List<MainService> mainServices = new ArrayList<>();
+
+    public void addMainService(MainService mainService){
+        mainServices.add(mainService);
+    }
 
     @Override
     public String toString() {
