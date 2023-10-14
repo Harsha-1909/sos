@@ -1,0 +1,32 @@
+package com.sos.application.repository;
+
+import com.sos.application.entity.Zone;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface ZoneRepository extends JpaRepository<Zone, Long> {
+
+    @Query("SELECT DISTINCT z.state FROM Zone z")
+    List<String> getStates();
+
+    @Query("SELECT DISTINCT z.district From Zone z WHERE z.state = :state")
+    Optional<List<String>> getDistricts(@Param("state") String state);
+
+    @Query("SELECT DISTINCT z.subDistrict " +
+            "FROM Zone z" +
+            " WHERE z.state = :state " +
+            "and z.district = :district")
+    Optional<List<String>> getSubDistricts(@Param("state") String state, @Param("district") String district);
+
+    @Query("SELECT z.area " +
+            "FROM Zone z " +
+            "WHERE z.state = :state " +
+            "and z.district = :district " +
+            "and z.subDistrict = :subDistrict"
+    )
+    Optional<List<String>> getAreas(@Param("state") String state, @Param("district") String district, @Param("subDistrict") String subDistrict);
+}
