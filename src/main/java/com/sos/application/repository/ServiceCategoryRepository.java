@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface ServiceCategoryRepository extends JpaRepository<ServiceCategory, Long> {
     @Query("SELECT sc FROM ServiceCategory sc WHERE sc.name = :name")
-    Optional<ServiceCategory> findByServiceCategoryName(@Param("name") String name);
+    Optional<ServiceCategory> findServiceCategoryByName(@Param("name") String name);
 }

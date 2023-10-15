@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -28,7 +27,7 @@ public class ServiceCategory {
     private String name;
 
     @OneToMany(mappedBy = "serviceCategory", cascade = CascadeType.REMOVE)
-    private List<MainService> mainServices = new ArrayList<>();
+    private List<MainService> mainServices;
 
     public void addMainService(MainService mainService){
         mainServices.add(mainService);
