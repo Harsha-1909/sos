@@ -15,5 +15,5 @@ import java.util.List;
 
 @Component
 public class District {
-    List<String> districts;
+    private List<String> districts;
 }

@@ -2,6 +2,7 @@ package com.sos.application.admin.controller;
 
 import com.sos.application.entity.ServiceCategory;
 import com.sos.application.exception.MethodParamViolationException;
+import com.sos.application.model.services.ServiceCategoryWrapper;
 import com.sos.application.repository.ServiceCategoryRepository;
 
 import com.sos.application.service.ServiceCategoryService;
@@ -11,12 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -38,6 +42,22 @@ public class ServiceCategoryController {
             return ResponseEntity.status(HttpStatus.CREATED).body("successfully created service category");
         } catch (MethodParamViolationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/service-categories")
+    public ResponseEntity<?> getServiceCategories() {
+        logger.info("Received get request to fetch all ServiceCategories");
+        try {
+            List<ServiceCategory> serviceCategories = serviceCategoryService.findAllServiceCategory();
+            List<ServiceCategoryWrapper> serviceCategoryWrappers = new ArrayList<>();
+            for (ServiceCategory serviceCategory : serviceCategories) {
+                serviceCategoryWrappers.add(new ServiceCategoryWrapper(serviceCategory.getId(), serviceCategory.getName()));
+            }
+            return ResponseEntity.ok(serviceCategoryWrappers);
+        } catch (Exception e) {
+            logger.error("An error occurred while processing the request", e);
+            return ResponseEntity.internalServerError().body("Something went wrong");
         }
     }
 
