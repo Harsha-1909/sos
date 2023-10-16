@@ -6,6 +6,7 @@ import com.sos.application.entity.SubService;
 import com.sos.application.exception.MethodParamViolationException;
 import com.sos.application.exception.ResourceExistsException;
 import com.sos.application.exception.ResourceNotExistsException;
+import com.sos.application.model.services.ServiceWrapper;
 import com.sos.application.repository.SubServiceRepository;
 import com.sos.application.validator.SubServiceValidator;
 import jakarta.transaction.Transactional;
@@ -14,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -39,12 +42,8 @@ public class SubServiceService {
         try {
             subServiceValidator.validateSubServiceName(subService.getName());
 
-            ServiceCategory serviceCategory = serviceCategoryService.getServiceCategoryById(serviceCategoryId);
             MainService mainService = mainServiceService.getMainServiceById(mainServiceId);
-            if(!Objects.equals(mainService.getServiceCategory().getId(), serviceCategory.getId())) {
-                throw new MethodParamViolationException("ServiceCategory Id is not related to MainServiceId");
-            }
-
+            checkMainServiceRelatedToServiceCategoryId(serviceCategoryId, mainService);
             checkSubServiceNotExists(subService.getName(), mainServiceId);
 
             subService.setMainService(mainService);
@@ -53,6 +52,13 @@ public class SubServiceService {
             logger.debug("Created SubService: {}", subServiceResource);
         } catch (ResourceNotExistsException | ResourceExistsException e) {
             throw new MethodParamViolationException(e);
+        }
+    }
+
+    private void checkMainServiceRelatedToServiceCategoryId(Long serviceCategoryId, MainService mainService) throws MethodParamViolationException {
+        logger.info("validating if mainService: {} has serviceCategoryId: {}", mainService, serviceCategoryId);
+        if(!Objects.equals(mainService.getServiceCategory().getId(), serviceCategoryId)) {
+                throw new MethodParamViolationException("MainService is not related to ServiceCategory Id");
         }
     }
 
@@ -83,6 +89,25 @@ public class SubServiceService {
             logger.debug("Delete SubService Successfully");
         } catch (ResourceNotExistsException e) {
             throw new MethodParamViolationException(e);
+        }
+    }
+
+    public List<ServiceWrapper> getSubServicesAssociatedWithMainServiceId(Long serviceCategoryId, Long mainServiceId) throws MethodParamViolationException {
+        logger.info("validate and fetch mainServiceId , check relation with ServiceCategoryId and fetch all subServices using mainService.getSubServices()");
+        try {
+            MainService mainService = mainServiceService.getMainServiceById(mainServiceId);
+            logger.debug("Fetched mainService: {} using mainServiceId: {}", mainService, mainServiceId);
+            checkMainServiceRelatedToServiceCategoryId(serviceCategoryId, mainService);
+
+            List<SubService> subServices = mainService.getSubServices();
+            logger.debug("Fetched list of SubServices using mainService.getSubServices(): {}", subServices);
+            List<ServiceWrapper> subServiceWrappers = new ArrayList<>();
+            for (SubService subService: subServices) {
+                subServiceWrappers.add(new ServiceWrapper(subService.getId(), subService.getName()));
+            }
+            return subServiceWrappers;
+        } catch (ResourceNotExistsException e) {
+            throw new MethodParamViolationException(e.getMessage(), e);
         }
     }
 }
