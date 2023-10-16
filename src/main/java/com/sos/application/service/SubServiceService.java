@@ -35,6 +35,7 @@ public class SubServiceService {
     private SubServiceValidator subServiceValidator;
 
     public void createSubService (Long serviceCategoryId, Long mainServiceId, SubService subService) throws MethodParamViolationException {
+        logger.info("starting createSubService");
         try {
             subServiceValidator.validateSubServiceName(subService.getName());
 
@@ -47,8 +48,9 @@ public class SubServiceService {
             checkSubServiceNotExists(subService.getName(), mainServiceId);
 
             subService.setMainService(mainService);
-            subServiceRepository.save(subService);
-            mainService.addSubService(subService);
+            SubService subServiceResource = subServiceRepository.save(subService);
+            mainService.addSubService(subServiceResource);
+            logger.debug("Created SubService: {}", subServiceResource);
         } catch (ResourceNotExistsException | ResourceExistsException e) {
             throw new MethodParamViolationException(e);
         }
@@ -56,6 +58,7 @@ public class SubServiceService {
 
     @Transactional
     private void checkSubServiceNotExists(String subServiceName, Long mainServiceId) throws ResourceExistsException {
+        logger.info("checking if SubService exists using subServiceName: {} and mainServiceId: {}", subServiceName, mainServiceId);
         Optional<SubService> subService = subServiceRepository.findBySubServiceNameAndMainServiceID(subServiceName, mainServiceId);
         if(subService.isPresent()){
             throw new ResourceExistsException("SubService already exists with provided subService name and mainService Id");
@@ -63,6 +66,7 @@ public class SubServiceService {
     }
 
     public void deleteSubService(Long serviceCategoryId, Long mainServiceId, Long subServiceId) throws MethodParamViolationException {
+        logger.info("starting deleteSubService");
         try {
             ServiceCategory serviceCategory = serviceCategoryService.getServiceCategoryById(serviceCategoryId);
             MainService mainService = mainServiceService.getMainServiceById(mainServiceId);
@@ -76,6 +80,7 @@ public class SubServiceService {
             }
 
             subServiceRepository.deleteById(subServiceId);
+            logger.debug("Delete SubService Successfully");
         } catch (ResourceNotExistsException e) {
             throw new MethodParamViolationException(e);
         }

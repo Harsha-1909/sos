@@ -39,6 +39,7 @@ public class ServiceCategoryService {
     }
 
     private void checkServiceCategoryNameNotExists(String serviceCategoryName) throws MethodParamViolationException {
+        logger.info("checking if ServiceCategory exists by name: {}", serviceCategoryName);
         Optional<ServiceCategory> serviceCategory = findServiceCategoryByName(serviceCategoryName);
         if(serviceCategory.isPresent()){
             try {
@@ -59,7 +60,7 @@ public class ServiceCategoryService {
     }
 
     public ServiceCategory getServiceCategoryById(Long serviceCategoryId) throws ResourceNotExistsException {
-        logger.info("Fetching ServiceCategory with serviceCategoryId: {}", serviceCategoryId);
+        logger.info("Fetching ServiceCategory with Id: {}", serviceCategoryId);
 
         Optional<ServiceCategory> serviceCategory = findServiceCategoryById(serviceCategoryId);
         if(serviceCategory.isEmpty()){

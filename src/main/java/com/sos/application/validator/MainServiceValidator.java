@@ -10,7 +10,7 @@ public class MainServiceValidator {
 
     private final static Logger logger = LoggerFactory.getLogger(MainServiceValidator.class);
     public void validateMainServiceName(String mainServiceName) throws MethodParamViolationException {
-        logger.info("validating mainService name:{}", mainServiceName);
+        logger.info("Starting input field validation for mainService name:{}", mainServiceName);
         if (mainServiceName == null) {
             throw new MethodParamViolationException("MainService name should not be null");
         } else if (mainServiceName.isEmpty()) {

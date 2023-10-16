@@ -24,6 +24,7 @@ public class SubServiceController {
 
     @PostMapping("/sub-services")
     public ResponseEntity<?> createSubService(@RequestBody SubService subService, @PathVariable Long serviceCategoryId, @PathVariable Long mainServiceId) {
+        logger.info("Received creation request for SubService with RequestBody: {} , serviceCategoryId: {} and mainServiceId: {}",subService, serviceCategoryId, mainServiceId);
         try {
             subServiceService.createSubService(serviceCategoryId, mainServiceId, subService);
             return ResponseEntity.status(HttpStatus.CREATED).body("Successfully created SubService");
@@ -34,6 +35,7 @@ public class SubServiceController {
 
     @DeleteMapping("/sub-services/{subServiceId}")
     public ResponseEntity<?> deleteSubService(@PathVariable Long serviceCategoryId, @PathVariable Long mainServiceId, @PathVariable Long subServiceId) {
+        logger.info("Received deletion request for SubService with serviceCategoryId: {}, mainServiceId: {} and subServiceId: {}", serviceCategoryId, mainServiceId, subServiceId);
         try {
             subServiceService.deleteSubService(serviceCategoryId, mainServiceId, subServiceId);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted SubService");

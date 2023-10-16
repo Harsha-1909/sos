@@ -45,6 +45,7 @@ public class MainServiceController {
 
     @DeleteMapping("/main-services/{mainServiceId}")
     public ResponseEntity<?> deleteMainService(@PathVariable Long serviceCategoryId, @PathVariable Long mainServiceId) {
+        logger.info("Received deletion request for MainService with serviceCategoryId: {} and mainServiceId: {}", serviceCategoryId, mainServiceId);
         Optional<MainService> result = mainServiceRepository.findById(mainServiceId);
         if(result.isPresent()){
             if(!Objects.equals(result.get().getServiceCategory().getId(), serviceCategoryId)){

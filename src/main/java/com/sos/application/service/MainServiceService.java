@@ -30,7 +30,7 @@ public class MainServiceService {
     private ServiceCategoryService serviceCategoryService;
 
     public MainService createMainService(MainService mainService, Long serviceCategoryId) throws MethodParamViolationException {
-        logger.info("Entered createMainService with mainService: {} and serviceCategoryId: {}", mainService, serviceCategoryId);
+        logger.info("started createMainService with mainService: {} and serviceCategoryId: {}", mainService, serviceCategoryId);
 
         mainServiceValidator.validateMainServiceName(mainService.getName());
 
@@ -69,6 +69,7 @@ public class MainServiceService {
     }
 
     public MainService getMainServiceById(Long mainServiceId) throws ResourceNotExistsException {
+        logger.info("Fetching MainService with Id: {}", mainServiceId);
         Optional<MainService> mainService = mainServiceRepository.findById(mainServiceId);
         if (mainService.isEmpty()) {
             throw new ResourceNotExistsException("MainService does not exists with the provided Id");

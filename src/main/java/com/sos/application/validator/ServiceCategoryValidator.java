@@ -13,7 +13,7 @@ public class ServiceCategoryValidator {
     private static final Logger logger = LoggerFactory.getLogger(ServiceCategoryValidator.class);
 
     public void validateServiceCategoryName(String serviceCategoryName) throws MethodParamViolationException {
-        logger.info("Starting validation for serviceCategoryName: {}",serviceCategoryName);
+        logger.info("Starting input field validation for ServiceCategory name: {}",serviceCategoryName);
 
         if (serviceCategoryName == null) {
             throw new MethodParamViolationException("name should not be null");
