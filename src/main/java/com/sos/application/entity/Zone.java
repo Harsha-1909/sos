@@ -2,9 +2,12 @@ package com.sos.application.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Setter
 @Getter
@@ -18,6 +21,8 @@ public class Zone {
     private String district;
     private String subDistrict;
     private String area;
+    @OneToMany(mappedBy = "zone")
+    private List<SosUser> sosUsers;
 
 
     @Override
