@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 
 @Component
-public class ServiceCategoryWrapper {
+public class ServiceWrapper {
     Long id;
     String name;
 }

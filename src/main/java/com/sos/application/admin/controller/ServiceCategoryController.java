@@ -2,7 +2,7 @@ package com.sos.application.admin.controller;
 
 import com.sos.application.entity.ServiceCategory;
 import com.sos.application.exception.MethodParamViolationException;
-import com.sos.application.model.services.ServiceCategoryWrapper;
+import com.sos.application.model.services.ServiceWrapper;
 import com.sos.application.repository.ServiceCategoryRepository;
 
 import com.sos.application.service.ServiceCategoryService;
@@ -50,11 +50,11 @@ public class ServiceCategoryController {
         logger.info("Received get request to fetch all ServiceCategories");
         try {
             List<ServiceCategory> serviceCategories = serviceCategoryService.findAllServiceCategory();
-            List<ServiceCategoryWrapper> serviceCategoryWrappers = new ArrayList<>();
+            List<ServiceWrapper> serviceWrappers = new ArrayList<>();
             for (ServiceCategory serviceCategory : serviceCategories) {
-                serviceCategoryWrappers.add(new ServiceCategoryWrapper(serviceCategory.getId(), serviceCategory.getName()));
+                serviceWrappers.add(new ServiceWrapper(serviceCategory.getId(), serviceCategory.getName()));
             }
-            return ResponseEntity.ok(serviceCategoryWrappers);
+            return ResponseEntity.ok(serviceWrappers);
         } catch (Exception e) {
             logger.error("An error occurred while processing the request", e);
             return ResponseEntity.internalServerError().body("Something went wrong");

@@ -2,6 +2,7 @@ package com.sos.application.admin.controller;
 
 import com.sos.application.entity.MainService;
 import com.sos.application.exception.MethodParamViolationException;
+import com.sos.application.model.services.ServiceWrapper;
 import com.sos.application.repository.MainServiceRepository;
 import com.sos.application.service.MainServiceService;
 import org.slf4j.Logger;
@@ -10,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -40,6 +43,20 @@ public class MainServiceController {
             return ResponseEntity.status(HttpStatus.CREATED).body("successfully created main service");
         } catch (MethodParamViolationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/main-services")
+    public ResponseEntity<?> getAllMainServicesAssociatedWithServiceCategoryId(@PathVariable Long serviceCategoryId) {
+        logger.info("Received get request to fetch all MainServices related to serviceCategoryId: {}", serviceCategoryId);
+        try {
+            List<ServiceWrapper> mainServiceWrappers = mainServiceService.getAllMainServicesAssociatedWithServiceCategoryId(serviceCategoryId);
+            return ResponseEntity.ok(mainServiceWrappers);
+        } catch (MethodParamViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            logger.error("An error occurred while processing the request", e);
+            return ResponseEntity.internalServerError().body("Something went wrong");
         }
     }
 

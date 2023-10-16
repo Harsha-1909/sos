@@ -5,6 +5,7 @@ import com.sos.application.entity.ServiceCategory;
 import com.sos.application.exception.MethodParamViolationException;
 import com.sos.application.exception.ResourceExistsException;
 import com.sos.application.exception.ResourceNotExistsException;
+import com.sos.application.model.services.ServiceWrapper;
 import com.sos.application.repository.MainServiceRepository;
 import com.sos.application.validator.MainServiceValidator;
 import jakarta.transaction.Transactional;
@@ -13,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -77,4 +80,20 @@ public class MainServiceService {
         return mainService.get();
     }
 
+    public List<ServiceWrapper> getAllMainServicesAssociatedWithServiceCategoryId(Long serviceCategoryId) throws MethodParamViolationException {
+        logger.info("validate ServiceCategoryId and fetch mainServices");
+        try {
+            ServiceCategory serviceCategory = serviceCategoryService.getServiceCategoryById(serviceCategoryId);
+            logger.debug("Fetched ServiceCategory: {}", serviceCategory);
+            List<MainService> mainServices = serviceCategory.getMainServices();
+            logger.debug("Fetched list of MainServices using ServiceCategory.getMainServices(): {}", mainServices);
+            List<ServiceWrapper> mainServiceWrappers = new ArrayList<>();
+            for (MainService mainService : mainServices) {
+                mainServiceWrappers.add(new ServiceWrapper(mainService.getId(), mainService.getName()));
+            }
+            return mainServiceWrappers;
+        } catch (ResourceNotExistsException e) {
+            throw new MethodParamViolationException(e);
+        }
+    }
 }
