@@ -4,6 +4,7 @@ import com.sos.application.entity.MainService;
 import com.sos.application.entity.ServiceCategory;
 import com.sos.application.exception.MethodParamViolationException;
 import com.sos.application.exception.ResourceExistsException;
+import com.sos.application.exception.ResourceNotExistsException;
 import com.sos.application.repository.MainServiceRepository;
 import com.sos.application.validator.MainServiceValidator;
 import jakarta.transaction.Transactional;
@@ -32,9 +33,15 @@ public class MainServiceService {
         logger.info("Entered createMainService with mainService: {} and serviceCategoryId: {}", mainService, serviceCategoryId);
 
         mainServiceValidator.validateMainServiceName(mainService.getName());
-        ServiceCategory serviceCategory = validateAndGetServiceCategoryById(serviceCategoryId);
 
-        validateMainServiceNotExists(mainService.getName(), serviceCategoryId);
+        ServiceCategory serviceCategory;
+         try {
+             serviceCategory = serviceCategoryService.getServiceCategoryById(serviceCategoryId);
+         } catch (ResourceNotExistsException e) {
+             throw new MethodParamViolationException(e);
+         }
+
+        checkMainServiceNotExists(mainService.getName(), serviceCategoryId);
 
         mainService.setServiceCategory(serviceCategory);
         MainService mainServiceResource = mainServiceRepository.save(mainService);
@@ -43,22 +50,12 @@ public class MainServiceService {
         return mainServiceResource;
     }
 
-    private ServiceCategory validateAndGetServiceCategoryById(Long serviceCategoryId) throws MethodParamViolationException {
-        logger.info("validating serviceCategoryId: {}", serviceCategoryId);
-
-        Optional<ServiceCategory> serviceCategory = serviceCategoryService.findServiceCategoryById(serviceCategoryId);
-        if(serviceCategory.isEmpty()){
-            throw new MethodParamViolationException("serviceCategoryId not exists");
-        }
-        return serviceCategory.get();
-    }
-
-    private void validateMainServiceNotExists(String mainServiceName, Long serviceCategoryId) throws MethodParamViolationException {
-        logger.info("validating MainService ");
+    private void checkMainServiceNotExists(String mainServiceName, Long serviceCategoryId) throws MethodParamViolationException {
+        logger.info("checking for existence of MainService with name: {} and ServiceCategory with Id: {}", mainServiceName, serviceCategoryId);
         Optional<MainService> mainService = findMainServiceByNameAndServiceCategoryId(mainServiceName, serviceCategoryId);
         if(mainService.isPresent()){
             try {
-                throw new ResourceExistsException("MainService name already exists with the provided serviceCategory id");
+                throw new ResourceExistsException("MainService already exists with the provided mainService name and serviceCategory id");
             } catch (ResourceExistsException e){
                 throw new MethodParamViolationException(e);
             }
@@ -70,4 +67,13 @@ public class MainServiceService {
         Optional<MainService> mainService = mainServiceRepository.findMainServiceByNameAndServiceCategoryId(mainServiceName, serviceCategoryId);
         return mainService;
     }
+
+    public MainService getMainServiceById(Long mainServiceId) throws ResourceNotExistsException {
+        Optional<MainService> mainService = mainServiceRepository.findById(mainServiceId);
+        if (mainService.isEmpty()) {
+            throw new ResourceNotExistsException("MainService does not exists with the provided Id");
+        }
+        return mainService.get();
+    }
+
 }

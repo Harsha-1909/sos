@@ -31,6 +31,10 @@ public class MainService {
     @OneToMany(mappedBy = "mainService", cascade = CascadeType.REMOVE)
     private List<SubService> subServices;
 
+    public void addSubService(SubService subService) {
+        subServices.add(subService);
+    }
+
     @Override
     public String toString() {
         return "MainService{" +

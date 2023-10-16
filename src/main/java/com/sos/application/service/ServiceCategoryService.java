@@ -3,6 +3,7 @@ package com.sos.application.service;
 import com.sos.application.entity.ServiceCategory;
 import com.sos.application.exception.MethodParamViolationException;
 import com.sos.application.exception.ResourceExistsException;
+import com.sos.application.exception.ResourceNotExistsException;
 import com.sos.application.repository.ServiceCategoryRepository;
 
 import com.sos.application.validator.ServiceCategoryValidator;
@@ -29,7 +30,7 @@ public class ServiceCategoryService {
         logger.info("Starting creation request for ServiceCategory: {}",serviceCategory);
 
         serviceCategoryValidator.validateServiceCategoryName(serviceCategory.getName());
-        validateServiceCategoryNotExists(serviceCategory.getName());
+        checkServiceCategoryNameNotExists(serviceCategory.getName());
 
         ServiceCategory serviceCategoryObj = serviceCategoryRepository.save(serviceCategory);
 
@@ -37,7 +38,7 @@ public class ServiceCategoryService {
         return serviceCategoryObj;
     }
 
-    private void validateServiceCategoryNotExists(String serviceCategoryName) throws MethodParamViolationException {
+    private void checkServiceCategoryNameNotExists(String serviceCategoryName) throws MethodParamViolationException {
         Optional<ServiceCategory> serviceCategory = findServiceCategoryByName(serviceCategoryName);
         if(serviceCategory.isPresent()){
             try {
@@ -57,4 +58,13 @@ public class ServiceCategoryService {
         return serviceCategoryRepository.findById(serviceCategoryId);
     }
 
+    public ServiceCategory getServiceCategoryById(Long serviceCategoryId) throws ResourceNotExistsException {
+        logger.info("Fetching ServiceCategory with serviceCategoryId: {}", serviceCategoryId);
+
+        Optional<ServiceCategory> serviceCategory = findServiceCategoryById(serviceCategoryId);
+        if(serviceCategory.isEmpty()){
+                throw new ResourceNotExistsException("serviceCategory not exists with provided Id");
+        }
+            return serviceCategory.get();
+    }
 }
