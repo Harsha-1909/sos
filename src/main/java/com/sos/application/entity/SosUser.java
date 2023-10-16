@@ -6,7 +6,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
 public class SosUser {
     @Id
@@ -14,7 +20,7 @@ public class SosUser {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column(length = 10, unique = true, nullable = false)
+    @Column(length = 10, unique = true)
     private String phoneNumber;
     @ManyToOne
     private Zone zone;
