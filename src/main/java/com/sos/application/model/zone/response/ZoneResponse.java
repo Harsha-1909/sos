@@ -1,4 +1,4 @@
-package com.sos.application.model.zone;
+package com.sos.application.model.zone.response;
 
 import com.sos.application.entity.Zone;
 import lombok.Data;

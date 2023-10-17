@@ -2,11 +2,11 @@ package com.sos.application.service;
 
 import com.sos.application.entity.Zone;
 import com.sos.application.exception.ResourceNotExistsException;
-import com.sos.application.model.zone.Area;
-import com.sos.application.model.zone.District;
-import com.sos.application.model.zone.State;
-import com.sos.application.model.zone.SubDistrict;
-import com.sos.application.model.zone.ZoneResponse;
+import com.sos.application.model.zone.response.AreaResponse;
+import com.sos.application.model.zone.response.DistrictResponse;
+import com.sos.application.model.zone.response.StateResponse;
+import com.sos.application.model.zone.response.SubDistrictResponse;
+import com.sos.application.model.zone.response.ZoneResponse;
 import com.sos.application.repository.ZoneRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,40 +22,64 @@ public class ZoneService {
     @Autowired
     private ZoneRepository zoneRepository;
 
-    @Autowired
-    private State state;
-
-    @Autowired
-    private District district;
-
-    @Autowired
-    private SubDistrict subDistrict;
-
-    @Autowired
-    private Area area;
-
-    public Optional<State> getStates(){
+    public StateResponse getStates() throws ResourceNotExistsException {
+        logger.info("Fetching states");
         List<String> states = zoneRepository.getStates();
-        state.setStates(states);
-        return Optional.of(state);
+        logger.debug("Fetched states list: {}", states);
+        if (states.isEmpty()) {
+            throw new ResourceNotExistsException("States not exists");
+        }
+
+        StateResponse stateResponse = new StateResponse();
+        stateResponse.setStates(states);
+        logger.debug("Constructed StateResponse: {}", stateResponse);
+
+        return stateResponse;
     }
 
-    public District getDistricts(String state){
+    public DistrictResponse getDistricts(String state) throws ResourceNotExistsException {
+        logger.info("Fetching districts for state: {}",state);
         List<String> districts = zoneRepository.getDistricts(state);
-        district.setDistricts(districts);
-        return district;
+        logger.debug("Fetched districts list: {}", districts);
+        if (districts.isEmpty()) {
+            throw new ResourceNotExistsException("Invalid request. check state name");
+        }
+
+        DistrictResponse districtResponse = new DistrictResponse();
+        districtResponse.setDistricts(districts);
+        logger.debug("Constructed DistrictResponse: {}", districtResponse);
+
+        return districtResponse;
     }
 
-    public SubDistrict getSubDistricts(String state, String district){
+    public SubDistrictResponse getSubDistricts(String state, String district) throws ResourceNotExistsException {
+        logger.info("Fetching subDistricts for state: {} and district: {}", state, district);
         List<String> subDistricts = zoneRepository.getSubDistricts(state, district);
-        subDistrict.setSubDistricts(subDistricts);
-        return subDistrict;
+        logger.debug("Fetched subDistricts list: {}", subDistricts);
+        if (subDistricts.isEmpty()) {
+            throw new ResourceNotExistsException("Invalid request. check state and district names");
+        }
+
+        SubDistrictResponse subDistrictResponse = new SubDistrictResponse();
+        subDistrictResponse.setSubDistricts(subDistricts);
+        logger.debug("Constructed SubDistrictResponse: {}", subDistrictResponse);
+
+        return subDistrictResponse;
     }
 
-    public Area getAreas(String state, String district, String subDistrict){
+    public AreaResponse getAreas(String state, String district, String subDistrict) throws ResourceNotExistsException {
+        logger.info("Fetching areas for state: {}, district: {} and subDistrict: {}", state, district, subDistrict);
         List<String> areas = zoneRepository.getAreas(state, district, subDistrict);
-        area.setAreas(areas);
-        return area;
+        logger.debug("Fetched areas list: {}", areas);
+        if (areas.isEmpty()) {
+            throw new ResourceNotExistsException("Invalid request. Check state, district and subDistrict names");
+        }
+
+        AreaResponse areaResponse = new AreaResponse();
+        areaResponse.setAreas(areas);
+        logger.debug("Constructed AreaResponse: {}", areaResponse);
+
+        return areaResponse;
     }
 
     public ZoneResponse getZone(Long zoneId) throws ResourceNotExistsException {
