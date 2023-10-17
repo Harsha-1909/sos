@@ -1,13 +1,17 @@
 package com.sos.application.controller;
 
-import com.sos.application.entity.Zone;
+import com.sos.application.exception.ResourceNotExistsException;
 import com.sos.application.model.zone.Area;
 import com.sos.application.model.zone.District;
 import com.sos.application.model.zone.State;
 import com.sos.application.model.zone.SubDistrict;
+import com.sos.application.model.zone.ZoneResponse;
 import com.sos.application.repository.ZoneRepository;
 import com.sos.application.service.ZoneService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +21,7 @@ import java.util.Optional;
 
 @RestController
 public class ZoneController {
-
+    private final static Logger logger = LoggerFactory.getLogger(ZoneController.class);
     @Autowired
     private ZoneRepository zoneRepository;
 
@@ -25,11 +29,17 @@ public class ZoneController {
     private ZoneService zoneService;
 
     @GetMapping("/zones/{zoneId}")
-    public ResponseEntity<Optional<Zone>> getZone(@PathVariable Long zoneId){
-        Optional<Zone> zone = zoneRepository.findById(zoneId);
-        if(zone.isPresent())
-            return ResponseEntity.ok().body(zone);
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<?> getZone(@PathVariable Long zoneId){
+        logger.info("Received get request for Zone for zoneId: {}", zoneId);
+        try {
+            ZoneResponse zoneResponse = zoneService.getZone(zoneId);
+            return ResponseEntity.ok().body(zoneResponse);
+        } catch (ResourceNotExistsException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            logger.error("Something went wrong", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/states")
