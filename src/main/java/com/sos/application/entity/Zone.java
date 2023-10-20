@@ -18,12 +18,18 @@ import java.util.List;
 public class Zone {
     @Id
     private Long id;
+
     private String state;
+
     private String district;
+
     private String subDistrict;
+
     private String area;
+
     @OneToMany(mappedBy = "zone")
     private List<SosUser> sosUsers;
+
     @ManyToMany
     private List<ServiceProvider> serviceProviders;
 

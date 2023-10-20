@@ -21,13 +21,18 @@ public class ServiceProvider {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(nullable = false)
     private String name;
+
     @Column(unique = true, length = 10)
     private String phoneNumber;
+
     private Boolean hasVerified;
+
     @ManyToMany(mappedBy = "serviceProviders")
     private List<Zone> zones;
+
     @ManyToMany
     private List<SubService> subServices;
 

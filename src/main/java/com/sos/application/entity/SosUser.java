@@ -18,10 +18,13 @@ public class SosUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(nullable = false)
     private String name;
+
     @Column(length = 10, unique = true)
     private String phoneNumber;
+
     @ManyToOne
     private Zone zone;
 }

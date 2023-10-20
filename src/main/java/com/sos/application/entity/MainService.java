@@ -2,6 +2,7 @@ package com.sos.application.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,7 +26,7 @@ public class MainService {
 
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ServiceCategory serviceCategory;
 
     @OneToMany(mappedBy = "mainService", cascade = CascadeType.REMOVE)

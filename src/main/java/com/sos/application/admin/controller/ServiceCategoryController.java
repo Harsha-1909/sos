@@ -2,7 +2,7 @@ package com.sos.application.admin.controller;
 
 import com.sos.application.entity.ServiceCategory;
 import com.sos.application.exception.MethodParamViolationException;
-import com.sos.application.model.services.ServiceWrapper;
+import com.sos.application.model.services.ServiceCategoryResponse;
 import com.sos.application.repository.ServiceCategoryRepository;
 
 import com.sos.application.service.ServiceCategoryService;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,12 +48,8 @@ public class ServiceCategoryController {
     public ResponseEntity<?> getServiceCategories() {
         logger.info("Received get request to fetch all ServiceCategories");
         try {
-            List<ServiceCategory> serviceCategories = serviceCategoryService.findAllServiceCategory();
-            List<ServiceWrapper> serviceWrappers = new ArrayList<>();
-            for (ServiceCategory serviceCategory : serviceCategories) {
-                serviceWrappers.add(new ServiceWrapper(serviceCategory.getId(), serviceCategory.getName()));
-            }
-            return ResponseEntity.ok(serviceWrappers);
+            List<ServiceCategoryResponse> serviceCategoryResponses = serviceCategoryService.getServiceCategories();
+            return ResponseEntity.ok(serviceCategoryResponses);
         } catch (Exception e) {
             logger.error("An error occurred while processing the request", e);
             return ResponseEntity.internalServerError().body("Something went wrong");

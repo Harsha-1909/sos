@@ -2,7 +2,7 @@ package com.sos.application.admin.controller;
 
 import com.sos.application.entity.SubService;
 import com.sos.application.exception.MethodParamViolationException;
-import com.sos.application.model.services.ServiceWrapper;
+import com.sos.application.model.services.SubServiceResponse;
 import com.sos.application.service.SubServiceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,11 +38,11 @@ public class SubServiceController {
     }
 
     @GetMapping("/sub-services")
-    public ResponseEntity<?> getSubServicesAssociatedWithMainServiceId(@PathVariable Long serviceCategoryId, @PathVariable Long mainServiceId) {
+    public ResponseEntity<?> getSubServicesByMainServiceId(@PathVariable Long serviceCategoryId, @PathVariable Long mainServiceId) {
         logger.info("Received get request to fetch all SubServices related to mainServiceId: {} and serviceCategoryId: {}", mainServiceId, serviceCategoryId);
         try {
-            List<ServiceWrapper> subServiceWrappers = subServiceService.getSubServicesAssociatedWithMainServiceId(serviceCategoryId, mainServiceId);
-            return ResponseEntity.ok(subServiceWrappers);
+            List<SubServiceResponse> subServiceResponses = subServiceService.getSubServicesByMainServiceId(serviceCategoryId, mainServiceId);
+            return ResponseEntity.ok(subServiceResponses);
         } catch (MethodParamViolationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
