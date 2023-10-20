@@ -1,6 +1,9 @@
 package com.sos.application.service;
 
+import com.sos.application.entity.Zone;
+import com.sos.application.exception.BadRequestBodyException;
 import com.sos.application.exception.ResourceNotExistsException;
+import com.sos.application.model.zone.request.ZoneRequest;
 import com.sos.application.model.zone.response.AreaResponse;
 import com.sos.application.model.zone.response.DistrictResponse;
 import com.sos.application.model.zone.response.StateResponse;
@@ -17,4 +20,6 @@ public interface ZoneService {
     SubDistrictResponse getSubDistricts(String state, String district) throws ResourceNotExistsException;
 
     AreaResponse getAreas(String state, String district, String subDistrict) throws ResourceNotExistsException;
+
+    Zone getZone(ZoneRequest zoneRequest) throws BadRequestBodyException;
 }

@@ -1,13 +1,16 @@
 package com.sos.application.service;
 
 import com.sos.application.entity.Zone;
+import com.sos.application.exception.BadRequestBodyException;
 import com.sos.application.exception.ResourceNotExistsException;
+import com.sos.application.model.zone.request.ZoneRequest;
 import com.sos.application.model.zone.response.AreaResponse;
 import com.sos.application.model.zone.response.DistrictResponse;
 import com.sos.application.model.zone.response.StateResponse;
 import com.sos.application.model.zone.response.SubDistrictResponse;
 import com.sos.application.model.zone.response.ZoneResponse;
 import com.sos.application.repository.ZoneRepository;
+import com.sos.application.validator.ZoneValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,9 @@ public class ZoneServiceImpl implements ZoneService {
     private static final Logger logger = LoggerFactory.getLogger(ZoneServiceImpl.class);
     @Autowired
     private ZoneRepository zoneRepository;
+
+    @Autowired
+    private ZoneValidator zoneValidator;
 
     public StateResponse getStates() throws ResourceNotExistsException {
         logger.info("Fetching states");
@@ -80,6 +86,34 @@ public class ZoneServiceImpl implements ZoneService {
         logger.debug("Constructed AreaResponse: {}", areaResponse);
 
         return areaResponse;
+    }
+
+    @Override
+    public Zone getZone(ZoneRequest zoneRequest) throws BadRequestBodyException {
+        logger.info("In getZone to fetch Zone for ZoneRequest: {}", zoneRequest);
+        zoneValidator.validateZoneRequestForFetchingZoneId(zoneRequest);
+        Zone zone = getZoneByZoneRequest(zoneRequest);
+        logger.debug("Fetched Zone: {}", zone);
+        return zone;
+    }
+
+    private Zone getZoneByZoneRequest(ZoneRequest zoneRequest) throws BadRequestBodyException {
+        logger.info("Fetching Zone for ZoneRequest: {}", zoneRequest);
+        Optional<Zone> zone = zoneRepository.getZone(
+                zoneRequest.getState(),
+                zoneRequest.getDistrict(),
+                zoneRequest.getSubDistrict(),
+                zoneRequest.getArea()
+        );
+
+        try {
+            if (zone.isEmpty()) {
+                throw new ResourceNotExistsException("Zone does not exists");
+            }
+            return zone.get();
+        } catch (ResourceNotExistsException e) {
+            throw new BadRequestBodyException(e.getMessage(), e);
+        }
     }
 
     public ZoneResponse getZone(Long zoneId) throws ResourceNotExistsException {
