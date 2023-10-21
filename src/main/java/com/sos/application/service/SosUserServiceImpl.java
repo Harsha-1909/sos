@@ -4,8 +4,8 @@ import com.sos.application.entity.SosUser;
 import com.sos.application.entity.Zone;
 import com.sos.application.exception.BadRequestBodyException;
 import com.sos.application.exception.MethodParamViolationException;
+import com.sos.application.model.sosUser.request.UpdateSosUserRequest;
 import com.sos.application.model.sosUser.response.SosUserResponse;
-import com.sos.application.model.zone.request.ZoneRequest;
 import com.sos.application.repository.SosUserRepository;
 import com.sos.application.validator.SosUserValidator;
 import org.slf4j.Logger;
@@ -41,15 +41,23 @@ public class SosUserServiceImpl implements SosUserService{
     }
 
     @Override
-    public SosUserResponse updateSosUserWithZone(ZoneRequest zoneRequest, Long userId) throws MethodParamViolationException, BadRequestBodyException {
-        logger.info("In updateSosUserWithZone with ZoneRequest: {} and sosUserId: {}", zoneRequest, userId);
+    public SosUserResponse updateSosUser(UpdateSosUserRequest updateSosUserRequest, Long userId) throws MethodParamViolationException, BadRequestBodyException {
+        logger.info("In updateSosUserWithZone with UpdateSosUserRequest: {} and sosUserId: {}", updateSosUserRequest, userId);
+        sosUserValidator.validateUpdateSosUserRequest(updateSosUserRequest);
         SosUser sosUser = findById(userId);
-        Zone zone = zoneService.getZone(zoneRequest);
-        sosUser.setZone(zone);
+
+        if (updateSosUserRequest.getZoneRequest() != null) {
+            Zone zone = zoneService.getZone(updateSosUserRequest.getZoneRequest());
+            sosUser.setZone(zone);
+        }
+
+        if (updateSosUserRequest.getName() != null) {
+            sosUser.setName(updateSosUserRequest.getName());
+        }
 
         logger.debug("Updating SosUser");
         SosUser sosUserUpdated = sosUserRepository.save(sosUser);
-        logger.debug("Updated Zone in SosUser: {}, SosUser.getZone(): {}", sosUserUpdated, sosUserUpdated.getZone());
+        logger.debug("Updated SosUser: {}, SosUser.getZone(): {}", sosUserUpdated, sosUserUpdated.getZone());
         SosUserResponse sosUserResponse = new SosUserResponse(sosUserUpdated);
         logger.debug("created sosUserResponse: {}", sosUserResponse);
         return sosUserResponse;

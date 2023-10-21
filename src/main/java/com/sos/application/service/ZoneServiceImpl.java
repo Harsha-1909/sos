@@ -91,7 +91,6 @@ public class ZoneServiceImpl implements ZoneService {
     @Override
     public Zone getZone(ZoneRequest zoneRequest) throws BadRequestBodyException {
         logger.info("In getZone to fetch Zone for ZoneRequest: {}", zoneRequest);
-        zoneValidator.validateZoneRequestForFetchingZoneId(zoneRequest);
         Zone zone = getZoneByZoneRequest(zoneRequest);
         logger.debug("Fetched Zone: {}", zone);
         return zone;
