@@ -11,4 +11,6 @@ public interface SosUserService {
     SosUser createSosUser(SosUser sosUser) throws BadRequestBodyException;
 
     SosUserResponse updateSosUserWithZone(ZoneRequest zoneRequest, Long userId) throws MethodParamViolationException, BadRequestBodyException;
+
+    SosUserResponse findBySosUserId(Long sosUserId) throws MethodParamViolationException;
 }

@@ -18,6 +18,8 @@ public class SosUserResponse {
         id = sosUser.getId();
         name = sosUser.getName();
         phoneNumber = sosUser.getPhoneNumber();
-        zoneResponse = new ZoneResponse(sosUser.getZone());
+        if (sosUser.getZone() != null) {
+            zoneResponse = new ZoneResponse(sosUser.getZone());
+        }
     }
 }

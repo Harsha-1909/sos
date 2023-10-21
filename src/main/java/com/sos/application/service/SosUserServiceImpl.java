@@ -4,7 +4,6 @@ import com.sos.application.entity.SosUser;
 import com.sos.application.entity.Zone;
 import com.sos.application.exception.BadRequestBodyException;
 import com.sos.application.exception.MethodParamViolationException;
-import com.sos.application.exception.ResourceNotExistsException;
 import com.sos.application.model.sosUser.response.SosUserResponse;
 import com.sos.application.model.zone.request.ZoneRequest;
 import com.sos.application.repository.SosUserRepository;
@@ -52,6 +51,15 @@ public class SosUserServiceImpl implements SosUserService{
         SosUser sosUserUpdated = sosUserRepository.save(sosUser);
         logger.debug("Updated Zone in SosUser: {}, SosUser.getZone(): {}", sosUserUpdated, sosUserUpdated.getZone());
         SosUserResponse sosUserResponse = new SosUserResponse(sosUserUpdated);
+        logger.debug("created sosUserResponse: {}", sosUserResponse);
+        return sosUserResponse;
+    }
+
+    @Override
+    public SosUserResponse findBySosUserId(Long sosUserId) throws MethodParamViolationException {
+        logger.info("In findBySosUserId with sosUserId: {}", sosUserId);
+        SosUser sosUser = findById(sosUserId);
+        SosUserResponse sosUserResponse = new SosUserResponse(sosUser);
         logger.debug("created sosUserResponse: {}", sosUserResponse);
         return sosUserResponse;
     }
