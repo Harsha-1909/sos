@@ -6,10 +6,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Setter
@@ -27,6 +30,12 @@ public class ServiceProvider {
 
     @Column(unique = true, length = 10)
     private String phoneNumber;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdTime;
+
+    @Column(unique = true)
+    private String aadhaarPath;
 
     private Boolean hasVerified;
 
