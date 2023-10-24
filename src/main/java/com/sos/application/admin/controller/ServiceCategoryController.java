@@ -1,6 +1,7 @@
 package com.sos.application.admin.controller;
 
 import com.sos.application.entity.ServiceCategory;
+import com.sos.application.exception.BadRequestBodyException;
 import com.sos.application.exception.MethodParamViolationException;
 import com.sos.application.model.services.ServiceCategoryResponse;
 import com.sos.application.repository.ServiceCategoryRepository;
@@ -39,7 +40,7 @@ public class ServiceCategoryController {
         try {
             serviceCategoryService.createServiceCategory(serviceCategory);
             return ResponseEntity.status(HttpStatus.CREATED).body("successfully created service category");
-        } catch (MethodParamViolationException e) {
+        } catch (BadRequestBodyException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

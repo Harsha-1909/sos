@@ -1,6 +1,7 @@
 package com.sos.application.service;
 
 import com.sos.application.entity.ServiceCategory;
+import com.sos.application.exception.BadRequestBodyException;
 import com.sos.application.exception.MethodParamViolationException;
 import com.sos.application.exception.ResourceExistsException;
 import com.sos.application.exception.ResourceNotExistsException;
@@ -29,7 +30,7 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
     @Autowired
     private ServiceCategoryValidator serviceCategoryValidator;
 
-    public ServiceCategory createServiceCategory(ServiceCategory serviceCategory) throws MethodParamViolationException {
+    public ServiceCategory createServiceCategory(ServiceCategory serviceCategory) throws BadRequestBodyException {
         logger.info("Starting creation request for ServiceCategory: {}",serviceCategory);
 
         serviceCategoryValidator.validateServiceCategoryName(serviceCategory.getName());
@@ -41,14 +42,14 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
         return serviceCategoryObj;
     }
 
-    private void checkServiceCategoryNameNotExists(String serviceCategoryName) throws MethodParamViolationException {
+    private void checkServiceCategoryNameNotExists(String serviceCategoryName) throws BadRequestBodyException {
         logger.info("checking if ServiceCategory exists by name: {}", serviceCategoryName);
         Optional<ServiceCategory> serviceCategory = findServiceCategoryByName(serviceCategoryName);
         if(serviceCategory.isPresent()){
             try {
                 throw new ResourceExistsException("ServiceCategory name already exists");
             } catch (ResourceExistsException e) {
-                throw new MethodParamViolationException(e);
+                throw new BadRequestBodyException(e.getMessage(),e);
             }
         }
     }
