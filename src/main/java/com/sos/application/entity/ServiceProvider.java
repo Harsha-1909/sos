@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
@@ -32,7 +32,7 @@ public class ServiceProvider {
     private String phoneNumber;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdTime;
+    private LocalDateTime createdTime;
 
     @Column(unique = true)
     private String aadhaarPath;
@@ -44,5 +44,17 @@ public class ServiceProvider {
 
     @ManyToMany
     private List<SubService> subServices;
+
+    @Override
+    public String toString() {
+        return "ServiceProvider{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", createdTime=" + createdTime +
+                ", aadhaarPath='" + aadhaarPath + '\'' +
+                ", hasVerified=" + hasVerified +
+                '}';
+    }
 
 }
