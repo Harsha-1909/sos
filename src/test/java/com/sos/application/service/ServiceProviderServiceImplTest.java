@@ -7,7 +7,7 @@ import com.sos.application.model.serviceProvider.response.CreateServiceProviderR
 import com.sos.application.repository.ServiceProviderRepository;
 import com.sos.application.validator.ServiceProviderValidator;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.BeforeEach;q
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
