@@ -37,20 +37,6 @@ public class SubServiceController {
         }
     }
 
-    @GetMapping("/sub-services")
-    public ResponseEntity<?> getSubServicesByMainServiceId(@PathVariable Long serviceCategoryId, @PathVariable Long mainServiceId) {
-        logger.info("Received get request to fetch all SubServices related to mainServiceId: {} and serviceCategoryId: {}", mainServiceId, serviceCategoryId);
-        try {
-            List<SubServiceResponse> subServiceResponses = subServiceService.getSubServicesByMainServiceId(serviceCategoryId, mainServiceId);
-            return ResponseEntity.ok(subServiceResponses);
-        } catch (MethodParamViolationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            logger.error("An error occurred while processing the request", e);
-            return ResponseEntity.internalServerError().body("Something went wrong");
-        }
-    }
-
     @DeleteMapping("/sub-services/{subServiceId}")
     public ResponseEntity<?> deleteSubService(@PathVariable Long serviceCategoryId, @PathVariable Long mainServiceId, @PathVariable Long subServiceId) {
         logger.info("Received deletion request for SubService with serviceCategoryId: {}, mainServiceId: {} and subServiceId: {}", serviceCategoryId, mainServiceId, subServiceId);

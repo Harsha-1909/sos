@@ -45,18 +45,6 @@ public class ServiceCategoryController {
         }
     }
 
-    @GetMapping("/service-categories")
-    public ResponseEntity<?> getServiceCategories() {
-        logger.info("Received get request to fetch all ServiceCategories");
-        try {
-            List<ServiceCategoryResponse> serviceCategoryResponses = serviceCategoryService.getServiceCategories();
-            return ResponseEntity.ok(serviceCategoryResponses);
-        } catch (Exception e) {
-            logger.error("An error occurred while processing the request", e);
-            return ResponseEntity.internalServerError().body("Something went wrong");
-        }
-    }
-
     @DeleteMapping("/service-categories/{serviceCategoryId}")
     public ResponseEntity<?>  deleteServiceCategory(@PathVariable Long serviceCategoryId){
         logger.info("Received delete request for serviceCategory id: {}",serviceCategoryId);

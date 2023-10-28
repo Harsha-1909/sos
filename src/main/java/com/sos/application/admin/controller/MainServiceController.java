@@ -46,20 +46,6 @@ public class MainServiceController {
         }
     }
 
-    @GetMapping("/main-services")
-    public ResponseEntity<?> getAllMainServicesByServiceCategoryId(@PathVariable Long serviceCategoryId) {
-        logger.info("Received get request to fetch all MainServices related to serviceCategoryId: {}", serviceCategoryId);
-        try {
-            List<MainServiceResponse> mainServiceResponses = mainServiceService.getMainServicesByServiceCategoryId(serviceCategoryId);
-            return ResponseEntity.ok(mainServiceResponses);
-        } catch (MethodParamViolationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            logger.error("An error occurred while processing the request", e);
-            return ResponseEntity.internalServerError().body("Something went wrong");
-        }
-    }
-
     @DeleteMapping("/main-services/{mainServiceId}")
     public ResponseEntity<?> deleteMainService(@PathVariable Long serviceCategoryId, @PathVariable Long mainServiceId) {
         logger.info("Received deletion request for MainService with serviceCategoryId: {} and mainServiceId: {}", serviceCategoryId, mainServiceId);
